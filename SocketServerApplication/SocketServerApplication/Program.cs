@@ -11,7 +11,7 @@ namespace SocketServerApplication
         static void Main(string[] args)
         {
             Console.Out.WriteLine("Start Socket Server Application");
-            SocketListener sockListener = new SocketListener();
+            SocketListener.StartListening();
             Console.In.Read();
         }
     }
