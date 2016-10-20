@@ -1,14 +1,13 @@
 
 import socket
-import sys
+import netifaces
 
-ipAddress = '163.188.55.163'
 message = "This is a test<EOF>"
 
 def main():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    server_address = (ipAddress, 11000)
+    server_address = (getHostIp(), 11000)
     print "Connecting to socket..."
     sock.connect(server_address)
 
@@ -27,6 +26,20 @@ def main():
         sock.close()
 
     pass
+
+def getHostIp():
+    ipList = []
+    interfaceList = netifaces.interfaces()
+    for i in interfaceList:
+        try:
+            ip = netifaces.ifaddresses(i)[netifaces.AF_INET]
+            ipList.append(ip[0]['addr'])
+        except KeyError:
+            pass
+        except ValueError:
+            pass
+
+    return ipList[0]
 
 if __name__ == '__main__':
     main()
