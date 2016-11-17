@@ -20,9 +20,15 @@ namespace SocketServerApplication
     class SocketListener
     {
         public static ManualResetEvent allDone = new ManualResetEvent(false);
+        private List<KeyValuePair<int, bool>> portList = new List<KeyValuePair<int, bool>>();
+
         public SocketListener()
         {
-
+            //Initialize the connection port list
+            for(int i = 1; i < 11; i++)
+            {
+                portList.Add(new KeyValuePair<int, bool>(11000 + i,false));
+            }
         }
 
         public static void StartListening()
@@ -82,13 +88,20 @@ namespace SocketServerApplication
 
             if (bytesRead > 0)
             {
+                //Handle in the incoming message here
                 state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
 
                 content = state.sb.ToString();
                 if (content.IndexOf("<EOF>") > -1)
                 {
                     Console.WriteLine("Read {0} bytes from socket. \n Data: {1}", content.Length, content);
-                    Send(handler, content);
+
+                    string[] request = content.Split(' ');
+                    if(request[0] == "GET")
+                    {
+                        String response = "PUT 11002<EOF>";
+                        Send(handler, response);
+                    }
                 }
                 else
                 {
