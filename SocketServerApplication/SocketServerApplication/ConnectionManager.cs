@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace SocketServerApplication
 {
     class ConnectionManager
     {
         private Dictionary<int, bool> portList = new Dictionary<int,bool>();
+        private SocketManager socketManager;
+
         public ConnectionManager()
         {
             for(int i = 1; i < 11; i++)
@@ -16,14 +16,20 @@ namespace SocketServerApplication
                 portList.Add(11000 + i, false);
 
             }
+
+            socketManager = new SocketManager(11000);
         }
 
         public void Run()
         {
+            socketManager.Open();
+
             while(true)
             {
                 Console.WriteLine("Connection Manager is running");
+                Thread.Sleep(1000);
             }
+            socketManager.Close();
         }
 
         public void AssignPort(int port)
